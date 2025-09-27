@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personal Site</title>
+    <style>
+        /* --- New Visual Theme --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f8f9fa; /* Lighter, softer grey background */
+            color: #212529; /* Darker text for better contrast */
+        }
+        .container {
+            max-width: 960px;
+            margin: 25px auto;
+            padding: 25px;
+            background-color: #ffffff; /* Pure white content area */
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08); /* Softer shadow */
+            border-radius: 8px;
+        }
+        nav {
+            display: flex;
+            border-bottom: 1px solid #dee2e6; /* Lighter border */
+            margin-bottom: 25px;
+        }
+        nav button {
+            padding: 12px 20px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            color: #6c757d; /* Muted color for inactive tabs */
+            border-bottom: 3px solid transparent; /* Placeholder for active indicator */
+            transition: color 0.2s ease-in-out;
+        }
+        nav button:hover {
+            color: #343a40;
+        }
+        nav button.active {
+            border-bottom: 3px solid #4CAF50; /* Green accent for active tab */
+            color: #212529; /* Active tab text is darker */
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        h1, h2 { color: #343a40; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* Styles for Games List */
+        .game-card { border: 1px solid #dee2e6; padding: 20px; margin-bottom: 15px; border-radius: 6px; }
+        .game-card h3 { margin-top: 0; }
+        .game-card a {
+            text-decoration: none;
+            background-color: #4CAF50; /* Green accent button */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .game-card a:hover { background-color: #45a049; } /* Darker green on hover */
+
+        /* Styles for Trading Log Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th {
+            background-color: #e9f5e9; /* Very light green for table headers */
+            font-weight: 600;
+        }
+        /* Zebra-striping for table rows */
+        tbody tr:nth-of-type(odd) { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>My Website</h1>
+        <p>Welcome to my personal project space.</p>
+    </header>
+
+    <nav>
+        <button class="nav-button active" data-target="about">About Me</button>
+        <button class="nav-button" data-target="games">Games</button>
+        <button class="nav-button" data-target="trading-log">Trading Log</button>
+        <button class="nav-button" data-target="blog">Blog</button>
+    </nav>
+
+    <main>
+        <section id="about" class="content-section active">
+            <h2>About Me</h2>
+            <p>This is the placeholder for your "About Me" information. You can write about your interests, skills, or anything else you want to share!</p>
+        </section>
+
+        <section id="games" class="content-section">
+            <h2>My Games</h2>
+            <p>Here are a few games I've made with Pygame.</p>
+            <div id="games-list-container"></div>
+        </section>
+
+        <section id="trading-log" class="content-section">
+            <h2>Trading Log</h2>
+            <div id="trading-log-container"></div>
+        </section>
+
+        <section id="blog" class="content-section">
+            <h2>Blog</h2>
+            <div id="blog-posts-container"></div>
+        </section>
+    </main>
+</div>
+
+<script>
+    // --- THIS SCRIPT SECTION IS UNCHANGED ---
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                populateGames(data.games);
+                populateTradingLog(data.trades);
+                populateBlog(data.blogPosts);
+            })
+            .catch(error => console.error('Error loading data:', error));
+
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                contentSections.forEach(sec => sec.classList.remove('active'));
+                button.classList.add('active');
+                const targetId = button.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    });
+
+    function populateGames(games) {
+        const container = document.getElementById('games-list-container');
+        if (!games || games.length === 0) {
+            container.innerHTML = '<p>No games to show yet!</p>';
+            return;
+        }
+        container.innerHTML = games.map(game => `
+                <div class="game-card">
+                    <h3>${game.name}</h3>
+                    <p>${game.description}</p>
+                    <a href="${game.path}" target="_blank" rel="noopener noreferrer">Play Game</a>
+                </div>
+            `).join('');
+    }
+
+    function populateTradingLog(trades) {
+        const container = document.getElementById('trading-log-container');
+        if (!trades || trades.length === 0) {
+            container.innerHTML = '<p>No trades logged yet.</p>';
+            return;
+        }
+        let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Date & Time</th>
+                            <th>Quantity</th>
+                            <th>Purchase Price</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+        tableHTML += trades.map(trade => `
+                <tr>
+                    <td>${trade.ticker}</td>
+                    <td>${new Date(trade.dateTime).toLocaleString()}</td>
+                    <td>${trade.quantity}</td>
+                    <td>$${trade.purchasePrice.toFixed(2)}</td>
+                    <td>${trade.notes}</td>
+                </tr>
+            `).join('');
+        tableHTML += '</tbody></table>';
+        container.innerHTML = tableHTML;
+    }
+
+    function populateBlog(posts) {
+        const container = document.getElementById('blog-posts-container');
+        if (!posts || posts.length === 0) {
+            container.innerHTML = '<p>No blog posts yet.</p>';
+            return;
+        }
+        container.innerHTML = posts.map(post => `
+                <article>
+                    <h3>${post.title}</h3>
+                    <p><small>Posted on ${new Date(post.date).toLocaleDateString()}</small></p>
+                    <p>${post.content}</p>
+                </article>
+                <hr>
+            `).join('');
+    }
+</script>
+</body>
+</html>

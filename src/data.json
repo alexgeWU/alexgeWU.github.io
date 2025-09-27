@@ -1,0 +1,42 @@
+{
+  "games": [
+    {
+      "name": "Asteroid Shooter",
+      "description": "A classic space shooter game built with Pygame.",
+      "path": "./asteroid-shooter/"
+    },
+    {
+      "name": "Platformer Game",
+      "description": "A fun 2D platformer. Jump around and collect coins!",
+      "path": "./platformer-game/"
+    }
+  ],
+  "trades": [
+    {
+      "ticker": "AAPL",
+      "purchasePrice": 175.50,
+      "quantity": 10,
+      "dateTime": "2025-09-26T10:30:00Z",
+      "notes": "Bought on positive earnings report."
+    },
+    {
+      "ticker": "GOOGL",
+      "purchasePrice": 140.25,
+      "quantity": 5,
+      "dateTime": "2025-09-27T14:00:00Z",
+      "notes": "Long term hold."
+    }
+  ],
+  "blogPosts": [
+    {
+      "title": "My First Blog Post",
+      "date": "2025-09-27",
+      "content": "This is the content of my very first blog post. I'm excited to start sharing my thoughts and projects here!"
+    },
+    {
+      "title": "Learning JavaScript",
+      "date": "2025-09-28",
+      "content": "Lately, I've been diving into JavaScript to make my website dynamic. The 'fetch' API is incredibly powerful for loading data."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Entry Helper</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2, h3 { color: #333; }
+        input, textarea, button { width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ddd; }
+        button { background-color: #4CAF50; color: white; cursor: pointer; border: none; font-size: 16px; }
+        button:hover { background-color: #45a049; }
+        textarea#output { height: 150px; font-family: monospace; background-color: #eee; }
+        .copy-button { width: auto; padding: 5px 10px; font-size: 12px; float: right; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Content Generator for <code>data.json</code></h2>
+    <p>Fill out a form below, click "Generate", and then copy the text from the output box and paste it into your <code>data.json</code> file.</p>
+
+    <hr>
+
+    <h3>Add a New Trade</h3>
+    <label for="tradeTicker"></label><input type="text" id="tradeTicker" placeholder="Ticker (e.g., NVDA)">
+    <label for="tradePrice"></label><input type="number" id="tradePrice" placeholder="Purchase Price (e.g., 305.10)">
+    <label for="tradeQuantity"></label><input type="number" id="tradeQuantity" placeholder="Quantity (e.g., 8)">
+    <label for="tradeNotes"></label><textarea id="tradeNotes" placeholder="Notes (e.g., AI-related play.)" rows="2"></textarea>
+    <button onclick="generateTrade()">Generate Trade JSON</button>
+
+    <hr>
+
+    <h3>Add a New Blog Post</h3>
+    <label for="blogTitle"></label><input type="text" id="blogTitle" placeholder="Blog Post Title">
+    <label for="blogContent"></label><textarea id="blogContent" placeholder="Content of the blog post..." rows="4"></textarea>
+    <button onclick="generateBlog()">Generate Blog JSON</button>
+
+    <hr>
+
+    <h3>Output:</h3>
+    <button class="copy-button" onclick="copyOutput()">Copy to Clipboard</button>
+    <label for="output"></label><textarea id="output" readonly></textarea>
+</div>
+
+<script>
+    function generateTrade() {
+        const trade = {
+            ticker: document.getElementById('tradeTicker').value.toUpperCase(),
+            purchasePrice: parseFloat(document.getElementById('tradePrice').value),
+            quantity: parseInt(document.getElementById('tradeQuantity').value),
+            dateTime: new Date().toISOString(),
+            notes: document.getElementById('tradeNotes').value
+        };
+        // The 'null, 2' part makes the JSON nicely formatted
+        document.getElementById('output').value = JSON.stringify(trade, null, 2) + ',';
+    }
+
+    function generateBlog() {
+        const post = {
+            title: document.getElementById('blogTitle').value,
+            date: new Date().toISOString().split('T')[0], // Gets YYYY-MM-DD
+            content: document.getElementById('blogContent').value
+        };
+        document.getElementById('output').value = JSON.stringify(post, null, 2) + ',';
+    }
+
+    function copyOutput() {
+        const outputArea = document.getElementById('output');
+        outputArea.select();
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+    }
+</script>
+</body>
+</html>
