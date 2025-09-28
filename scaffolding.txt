@@ -1,122 +1,58 @@
-Project Scaffolding & Workflow Guide (Scalable Version)
-This guide outlines a scalable file structure for a static website designed to host multiple compiled Pygame applications and easily accommodate new content sections.
+Project Workflow Guide (Static HTML Site)
+
+This guide outlines the file structure and workflow for your personal website, designed for hosting HTML/JavaScript applications and other static content.
 
 1. The File Structure
-This structure separates your projects, making them independent and easier to manage.
 
-your-project-folder/
-├── games/
-│   ├── asteroid-shooter/
-│   │   ├── main.py
-│   │   └── assets/
-│   └── platformer-game/
-│       ├── main.py
-│       └── assets/
-│
-├── src/
-│   ├── index.html
-│   └── data.json
-│
-├── dist/
-│   └── (This folder is created during the build step)
-│
-└── README.md
-
-Folder Breakdown:
-
-/games/ (Plural)
-
-Purpose: This parent folder now holds all of your individual game projects.
-
-Each game gets its own subfolder (e.g., /asteroid-shooter/, /platformer-game/). This is crucial. It keeps each game's code and assets completely separate.
-
-/src/ (Source)
-
-Purpose: Contains the source files for your main website.
-
-index.html: Your main website file. This will act as the "shell" for your application.
-
-data.json: The "database" for your trading logs, blog posts, and now, a list of your games.
-
-/dist/ (Distribution)
-
-Purpose: This folder will contain the final, ready-to-deploy version of your website. Never edit files here directly. It's the "build" output. This is the only folder you will upload to your host.
+- /games/: Contains the source code for your individual HTML/JavaScript games.
+  - /minesweeper/: Source files for the Minesweeper game.
+- /src/: Contains the source files for your main portfolio website.
+  - index.html: The main page template.
+  - data.json: Data for trades, blog posts, and the list of games.
+- /dist/: The distribution folder. This contains the final, deployable version of your site. **You should not edit files in here directly.**
+- README.md: Project description.
 
 2. The Development Workflow
-The process is similar, but we now repeat steps for each game.
+
+The process involves developing in your source folders and then copying the finished files into the `dist` folder for deployment.
 
 Step 1: Develop
 
-To work on your website: Edit files in /src/. Open src/index.html in your browser to preview.
+- To work on your main website: Edit the files in the `/src/` directory. You can open `src/index.html` in your browser to preview your changes.
+- To work on a game: Edit the game files directly within their folders (e.g., in `/games/minesweeper/`).
 
-To work on a game: Navigate to its specific folder (e.g., /games/platformer-game/) and work on the code there. Run python games/platformer-game/main.py to test it locally.
+Step 2: Assemble the Final Website (The "Build" Step)
 
-Step 2: Build the Game(s) for the Web
+This step collects all your source files into the `/dist/` folder.
 
-When you're ready to update your games, you run the build command for each game project individually.
+1.  **Clear the `dist` folder:** Delete everything inside it to ensure a clean build.
+2.  **Copy website files:** Copy `index.html` and `data.json` from `/src/` into `/dist/`.
+3.  **Copy game files:** Copy your game project folder (e.g., `games/minesweeper`) into the `dist/` folder.
 
-Open your terminal.
-
-Run the pygbag command on the first game's folder:
-
-pygbag games/asteroid-shooter/
-
-Run the command for the second game:
-
-pygbag games/platformer-game/
-
-This creates a build/web folder inside each of your game directories.
-
-Step 3: Assemble the Final Website
-
-This "build" step combines your website shell and all your compiled games into the final dist folder.
-
-Clear the dist folder: Delete everything inside it to ensure a clean build.
-
-Copy website files: Copy index.html and data.json from /src/ into /dist/.
-
-Copy game builds: For each game, copy its build/web folder into dist/ and rename it to match the game's folder name.
-
-Copy games/asteroid-shooter/build/web to dist/asteroid-shooter.
-
-Copy games/platformer-game/build/web to dist/platformer-game.
-
-After this step, your /dist/ folder will be perfectly organized:
+After this step, your `/dist/` folder will be perfectly organized for deployment:
 
 dist/
 ├── index.html
 ├── data.json
-├── asteroid-shooter/
-│   ├── index.html
-│   └── (other pygbag files)
-└── platformer-game/
+└── minesweeper/
     ├── index.html
-    └── (other pygbag files)
+    └── (and any other game assets like CSS or JS)
 
-Step 4: Deploy
+Step 3: Deploy
 
-Upload the entire contents of the /dist/ folder to your static hosting provider. Your index.html can then link to the games at ./asteroid-shooter/ and ./platformer-game/.
+Upload the entire contents of the `/dist/` folder to your static hosting provider (like GitHub Pages). Your main `index.html` will then correctly link to your game at the path you defined in `data.json` (e.g., `./minesweeper/`).
 
-3. How to Make It Scalable & Modifiable
-This structure makes adding new content incredibly simple.
+3. How to Add a New Game
 
-To add a new Website Section:
-
-Add a new navigation link in src/index.html.
-
-Create the new div for your section's content within src/index.html. Your existing tab-switching JavaScript will handle the rest.
-
-Follow the build process to copy the updated index.html to dist/ and deploy.
-
-To add a new Pygame Game:
-
-Create a new folder for your game inside the /games/ directory (e.g., games/new-puzzle-game/).
-
-Write your game code and assets in that new folder.
-
-(Optional but Recommended): Add an entry for your new game in src/data.json. Your JavaScript in index.html can read this to dynamically create the list of games to choose from.
-
-Follow the build process: run pygbag on your new game's folder, copy the result to dist/, and deploy.
-
-By following this pattern, you can add dozens of games and sections to your site without the codebase becoming a tangled mess. Each part remains independent and easy to update.
-
+1.  Create a new folder for your game inside the `/games/` directory (e.g., `games/new-cool-game/`).
+2.  Add your game's HTML, CSS, and JavaScript files to that new folder.
+3.  Add a new entry for your game in `src/data.json`. This will make it appear on your website's "Games" page.
+    ```json
+    {
+      "name": "My New Cool Game",
+      "description": "A brief description of the game.",
+      "path": "./new-cool-game/"
+    }
+    ```
+4.  Follow the "Build" steps to copy the new game files into the `dist/` folder.
+5.  Deploy the updated `dist` folder.

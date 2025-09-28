@@ -21,8 +21,9 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
         th { background-color: #e9f5e9; font-weight: 600; }
+        th.sortable { cursor: pointer; }
+        th.sortable:hover { background-color: #d4eed4; }
         tbody tr:nth-of-type(odd) { background-color: #f8f9fa; }
-        /* --- UPDATED STYLES FOR ANALYTICS CARDS --- */
         .stats-container { display: flex; flex-wrap: wrap; gap: 15px; text-align: center; margin: 20px 0; }
         .stat-card { background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; flex: 1; min-width: 180px;}
         .stat-card h3 { margin-top: 0; color: #6c757d; font-size: 15px; }
@@ -42,7 +43,12 @@
         <button class="nav-button" data-target="blog">Blog</button>
     </nav>
     <main>
-        <section id="about" class="content-section active"><h2>About Me</h2><p>Wasshup</p></section>
+        <section id="about" class="content-section active">
+            <h2>About Me</h2>
+            <p>Hello! I'm Alex Ge, a passionate software developer with a keen interest in financial markets and game development.</p>
+            <p>I specialize in Python and JavaScript, and I enjoy building interactive web applications that are both functional and fun. This website serves as a portfolio of my personal projects, showcasing my skills in data visualization, web development, and more.</p>
+            <p>Feel free to explore the games I've built or dive into my trading log, where I apply my analytical skills to market data. You can find more of my work on <a href="https://github.com/your-github-username" target="_blank">GitHub</a>.</p>
+        </section>
         <section id="games" class="content-section"><h2>My Games</h2><div id="games-list-container"></div></section>
         <section id="trading-log" class="content-section"><h2>Trading Log</h2><div id="trading-log-container"></div></section>
         <section id="analytics" class="content-section"><h2>Trade Analytics</h2><div id="stats-container" class="stats-container"></div><div><h3>Cumulative P/L Over Time</h3><canvas id="profitChart"></canvas></div></section>
@@ -51,12 +57,15 @@
 </div>
 
 <script>
+    let allTrades = [];
+    let sortState = { column: 'purchaseDateTime', direction: 'desc' };
+
     document.addEventListener('DOMContentLoaded', () => {
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
                 populateGames(data.games);
-                populateTradingLog(data.trades);
+                setupTradingLog(data.trades);
                 populateBlog(data.blogPosts);
                 populateAnalytics(data.trades);
             })
@@ -74,101 +83,95 @@
         });
     });
 
-    function populateGames(games) { /* ... Function is unchanged ... */ }
-
-    // --- UPDATED TRADING LOG FUNCTION ---
-    function populateTradingLog(trades) {
-        const container = document.getElementById('trading-log-container');
-        if (!trades || trades.length === 0) {
-            container.innerHTML = '<p>No trades logged yet.</p>';
+    function populateGames(games) {
+        const container = document.getElementById('games-list-container');
+        if (!games || games.length === 0) {
+            container.innerHTML = '<p>No games available yet.</p>';
             return;
         }
+        container.innerHTML = games.map(game => {
+            // Correctly constructs the path for the deployed game
+            const gamePath = `${game.path}/index.html`;
+            return `
+                <div class="game-card">
+                    <h3>${game.name}</h3>
+                    <p>${game.description}</p>
+                    <a href="${gamePath}" target="_blank">Play Game</a>
+                </div>`;
+        }).join('');
+    }
+
+    function setupTradingLog(trades) {
+        allTrades = trades.map(trade => ({...trade, pnl: trade.proceeds - trade.costBasis}));
+        renderTradingLog();
+    }
+
+    function sortTrades(column) {
+        const newDirection = (sortState.column === column && sortState.direction === 'asc') ? 'desc' : 'asc';
+        sortState = { column, direction: newDirection };
+
+        allTrades.sort((a, b) => {
+            let valA = a[column];
+            let valB = b[column];
+
+            if (column.includes('Date')) {
+                valA = new Date(valA);
+                valB = new Date(valB);
+            }
+
+            if (valA < valB) return newDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return newDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        renderTradingLog();
+    }
+
+    function renderTradingLog() {
+        const container = document.getElementById('trading-log-container');
         let tableHTML = `
             <table>
                 <thead>
                     <tr>
-                        <th>Status</th>
-                        <th>Ticker</th>
-                        <th>Purchase Date</th>
+                        <th class="sortable" onclick="sortTrades('ticker')">Ticker</th>
+                        <th class="sortable" onclick="sortTrades('purchaseDateTime')">Purchase Date</th>
                         <th>Cost Basis</th>
                         <th>Proceeds</th>
+                        <th class="sortable" onclick="sortTrades('pnl')">P/L</th>
                         <th>Notes</th>
                     </tr>
                 </thead>
-                <tbody>
-        `;
-        tableHTML += trades.map(trade => `
-            <tr>
-                <td>${trade.status}</td>
-                <td>${trade.ticker}</td>
-                <td>${new Date(trade.purchaseDateTime).toLocaleDateString()}</td>
-                <td>$${trade.costBasis ? trade.costBasis.toFixed(2) : 'N/A'}</td>
-                <td>$${trade.proceeds ? trade.proceeds.toFixed(2) : 'N/A'}</td>
-                <td>${trade.notes}</td>
-            </tr>
-        `).join('');
+                <tbody>`;
+        
+        tableHTML += allTrades.map(trade => {
+            const pnl = trade.pnl;
+            const pnlClass = pnl >= 0 ? 'win' : 'loss';
+            return `
+                <tr>
+                    <td>${trade.ticker}</td>
+                    <td>${new Date(trade.purchaseDateTime).toLocaleDateString()}</td>
+                    <td>$${trade.costBasis.toFixed(2)}</td>
+                    <td>$${trade.proceeds.toFixed(2)}</td>
+                    <td class="${pnlClass}">$${pnl.toFixed(2)}</td>
+                    <td>${trade.notes}</td>
+                </tr>`;
+        }).join('');
+
         tableHTML += '</tbody></table>';
         container.innerHTML = tableHTML;
     }
 
-    function populateBlog(posts) { /* ... Function is unchanged ... */ }
-
-    // --- UPDATED ANALYTICS FUNCTION ---
-    function populateAnalytics(trades) {
-        const closedTrades = trades.filter(trade => trade.status && trade.status.toLowerCase() === 'closed');
-
-        if (closedTrades.length === 0) {
-            document.getElementById('stats-container').innerHTML = "<p>No closed trades to analyze yet.</p>";
-            return;
-        }
-
-        let totalGainLoss = 0;
-        let totalCostBasis = 0; // New variable
-        let totalProceeds = 0;  // New variable
-        let wins = 0;
-        let losses = 0;
-
-        closedTrades.forEach(trade => {
-            // Use costBasis and proceeds if they exist, otherwise calculate from price/quantity
-            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : (trade.closePrice - trade.purchasePrice) * trade.quantity;
-            totalGainLoss += pnl;
-            totalCostBasis += trade.costBasis || (trade.purchasePrice * trade.quantity);
-            totalProceeds += trade.proceeds || (trade.closePrice * trade.quantity);
-            if (pnl > 0) wins++; else losses++;
-        });
-
-        const winLossRatio = losses > 0 ? (wins / losses).toFixed(2) : wins;
-
-        // Added Total Cost Basis and Total Proceeds cards
-        document.getElementById('stats-container').innerHTML = `
-            <div class="stat-card"><h3>Total Cost Basis</h3><p>$${totalCostBasis.toFixed(2)}</p></div>
-            <div class="stat-card"><h3>Total Proceeds</h3><p>$${totalProceeds.toFixed(2)}</p></div>
-            <div class="stat-card"><h3>Total P/L</h3><p class="${totalGainLoss >= 0 ? 'win' : 'loss'}">$${totalGainLoss.toFixed(2)}</p></div>
-            <div class="stat-card"><h3>Win/Loss</h3><p><span class="win">${wins}</span> / <span class="loss">${losses}</span></p></div>
-            <div class="stat-card"><h3>W/L Ratio</h3><p>${winLossRatio}</p></div>
-        `;
-
-        closedTrades.sort((a, b) => new Date(a.closeDateTime) - new Date(b.closeDateTime));
-        let cumulativeProfit = 0;
-        const chartData = { labels: [], profits: [] };
-        closedTrades.forEach(trade => {
-            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : (trade.closePrice - trade.purchasePrice) * trade.quantity;
-            cumulativeProfit += pnl;
-            chartData.labels.push(new Date(trade.closeDateTime).toLocaleDateString());
-            chartData.profits.push(cumulativeProfit.toFixed(2));
-        });
-
-        /** @type {any} */
-        const Chart = window.Chart;
-        const ctx = document.getElementById('profitChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: { /* ... Unchanged ... */ },
-            options: { /* ... Unchanged ... */ }
-        });
+    function populateBlog(posts) {
+        const container = document.getElementById('blog-posts-container');
+        container.innerHTML = posts.map(post => `
+            <article>
+                <h3>${post.title}</h3>
+                <p><small>Posted on ${post.date}</small></p>
+                <p>${post.content}</p>
+            </article>
+        `).join('<hr>');
     }
-
-    // This is the full chart definition which was unchanged, included for completeness
+    
     function populateAnalytics(trades) {
         const closedTrades = trades.filter(trade => trade.status && trade.status.toLowerCase() === 'closed');
         if (closedTrades.length === 0) { document.getElementById('stats-container').innerHTML = "<p>No closed trades to analyze yet.</p>"; return; }
@@ -218,6 +221,7 @@
             }
         });
     }
+
 </script>
 </body>
 </html>
