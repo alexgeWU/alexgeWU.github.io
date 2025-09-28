@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Personal Site</title>
+    <title>Alexander Ge | Portfolio</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; background-color: #f8f9fa; color: #212529; }
         .container { max-width: 960px; margin: 25px auto; padding: 25px; background-color: #ffffff; box-shadow: 0 2px 15px rgba(0,0,0,0.08); border-radius: 8px; }
-        nav { display: flex; border-bottom: 1px solid #dee2e6; margin-bottom: 25px; }
+        nav { display: flex; flex-wrap: wrap; border-bottom: 1px solid #dee2e6; margin-bottom: 25px; }
         nav button { padding: 12px 20px; border: none; background-color: transparent; cursor: pointer; font-size: 16px; color: #6c757d; border-bottom: 3px solid transparent; transition: color 0.2s ease-in-out; }
         nav button:hover { color: #343a40; }
-        nav button.active { border-bottom: 3px solid #4CAF50; color: #212529; }
+        nav button.active { border-bottom: 3px solid #007bff; color: #212529; }
         .content-section { display: none; }
         .content-section.active { display: block; }
-        h1, h2 { color: #343a40; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .game-card { border: 1px solid #dee2e6; padding: 20px; margin-bottom: 15px; border-radius: 6px; }
-        .game-card a { text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 15px; border-radius: 5px; display: inline-block; transition: background-color 0.2s ease-in-out; }
-        .game-card a:hover { background-color: #45a049; }
+        h1, h2, h3 { color: #343a40; }
+        h1 { border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 40px;}
+        .project-card, .job { border: 1px solid #dee2e6; padding: 20px; margin-bottom: 20px; border-radius: 6px; background-color: #fff; }
+        .project-card a, .game-card a { text-decoration: none; background-color: #007bff; color: white; padding: 10px 15px; border-radius: 5px; display: inline-block; transition: background-color 0.2s ease-in-out; }
+        .project-card a:hover, .game-card a:hover { background-color: #0056b3; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        .job-title { font-weight: bold; }
+        .job-duration { color: #6c757d; font-size: 0.9em; }
+        .social-links a { margin-right: 15px; text-decoration: none; color: #007bff; }
+        .social-links a:hover { text-decoration: underline; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
-        th { background-color: #e9f5e9; font-weight: 600; }
+        th { background-color: #e9ecef; font-weight: 600; }
         th.sortable { cursor: pointer; }
-        th.sortable:hover { background-color: #d4eed4; }
+        th.sortable:hover { background-color: #dce4e9; }
         tbody tr:nth-of-type(odd) { background-color: #f8f9fa; }
         .stats-container { display: flex; flex-wrap: wrap; gap: 15px; text-align: center; margin: 20px 0; }
         .stat-card { background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; flex: 1; min-width: 180px;}
@@ -34,25 +42,97 @@
 </head>
 <body>
 <div class="container">
-    <header><h1>Alex Ge</h1><p>Welcome to my personal project space.</p></header>
+    <header>
+        <h1>Alexander Ge</h1>
+        <p>Computer Engineering Student at Washington University in St. Louis</p>
+        <div class="social-links">
+            <a href="mailto:age@wustl.edu">age@wustl.edu</a> | 
+            <a href="https://github.com/your-github-url" target="_blank">GitHub</a> | 
+            <a href="https://linkedin.com/in/your-linkedin-url" target="_blank">LinkedIn</a>
+        </div>
+    </header>
     <nav>
-        <button class="nav-button active" data-target="about">About Me</button>
+        <button class="nav-button active" data-target="about">About</button>
+        <button class="nav-button" data-target="experience">Experience</button>
+        <button class="nav-button" data-target="projects">Projects</button>
         <button class="nav-button" data-target="games">Games</button>
         <button class="nav-button" data-target="trading-log">Trading Log</button>
         <button class="nav-button" data-target="analytics">Analytics</button>
-        <button class="nav-button" data-target="blog">Blog</button>
     </nav>
     <main>
         <section id="about" class="content-section active">
             <h2>About Me</h2>
-            <p>Hello! I'm Alex Ge, a passionate software developer with a keen interest in financial markets and game development.</p>
-            <p>I specialize in Python and JavaScript, and I enjoy building interactive web applications that are both functional and fun. This website serves as a portfolio of my personal projects, showcasing my skills in data visualization, web development, and more.</p>
-            <p>Feel free to explore the games I've built or dive into my trading log, where I apply my analytical skills to market data. You can find more of my work on <a href="https://github.com/your-github-username" target="_blank">GitHub</a>.</p>
+            <p>I am a Computer Engineering student at Washington University in St. Louis (Expected May 2027) with a 3.97 GPA and a passion for building robust, efficient, and scalable systems. My interests lie at the intersection of low-level hardware design and high-level software architecture.</p>
+            <p>From designing RISC-V CPU cores in SystemVerilog to developing HIPAA-compliant software for XR devices, I thrive on tackling complex technical challenges. This website serves as a living portfolio of my academic projects, professional experience, and personal explorations in technology and finance.</p>
         </section>
-        <section id="games" class="content-section"><h2>My Games</h2><div id="games-list-container"></div></section>
-        <section id="trading-log" class="content-section"><h2>Trading Log</h2><div id="trading-log-container"></div></section>
-        <section id="analytics" class="content-section"><h2>Trade Analytics</h2><div id="stats-container" class="stats-container"></div><div><h3>Cumulative P/L Over Time</h3><canvas id="profitChart"></canvas></div></section>
-        <section id="blog" class="content-section"><h2>Blog</h2><div id="blog-posts-container"></div></section>
+
+        <section id="experience" class="content-section">
+            <h2>Professional Experience</h2>
+            <div class="job">
+                <h3><span class="job-title">Software Development Intern</span> | DentalTechUp LLC</h3>
+                <p class="job-duration">May 2025 – August 2025</p>
+                <ul>
+                    <li>Engineered HIPAA compliant HealthXR software using Unity (C#) and MRTK3 for the HoloLens 2.</li>
+                    <li>Built and deployed backend infrastructure using Firebase Functions (TypeScript) for secure authentication, cloud storage, and database management.</li>
+                    <li>Contributed to the technical architecture for a startup that secured $25K in seed investment and advanced as a finalist in the $75K Arch Grants competition.</li>
+                </ul>
+            </div>
+            <div class="job">
+                <h3><span class="job-title">Teaching Assistant</span> | Washington University in St. Louis</h3>
+                <p class="job-duration">August 2025 – Present</p>
+                <ul>
+                    <li><strong>Object Oriented Software Development (C++):</strong> Mentor 150+ students in advanced C++ object-oriented, procedural, and generic software development. Responsible for debugging complex student projects, enforcing coding standards, and grading lab submissions.</li>
+                    <li><strong>Introduction to Computer Engineering:</strong> Supported a course of ~300 students by holding office hours, debugging C++ code, and clarifying fundamental concepts in digital logic and systems design.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="projects" class="content-section">
+            <h2>Technical Projects</h2>
+            <div class="project-card">
+                <h3>Project Lead, HealthXR | Google Developer Group (DSC) - WashU</h3>
+                <ul>
+                    <li>Architecting a HIPAA-compliant Machine Learning pipeline to process and secure Protected Health Information (PHI).</li>
+                    <li>Developing a backend system for secure data storage and automated appointment note-taking, designed for integration with XR smart glasses.</li>
+                    <li>Leading the project to streamline clinical workflows by leveraging XR technology to reduce administrative overhead for medical practitioners.</li>
+                </ul>
+            </div>
+            <div class="project-card">
+                <h3>RISC-V CPU Core (SystemVerilog)</h3>
+                <ul>
+                    <li>Designed and implemented a single-cycle 32-bit RISC-V CPU core from the ground up, including datapath and control logic, using synthesizable SystemVerilog.</li>
+                    <li>Implemented over 15 instructions from the base integer instruction set (RV32I), covering arithmetic, logic, memory access, and control flow.</li>
+                    <li>Developed a comprehensive testbench suite to validate the functionality of each instruction, ensuring the functional correctness of the RTL design.</li>
+                </ul>
+            </div>
+            <div class="project-card">
+                <h3>C++ Terminal Game Engine</h3>
+                <ul>
+                    <li>Developed a versatile game engine in C++ for terminal-based games, featuring a scalable board design.</li>
+                    <li>Implemented robust rule validation and game logic for Gomoku and Tic-Tac-Toe.</li>
+                    <li>Created a comprehensive suite of unit tests to ensure software reliability and correctness.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="games" class="content-section">
+            <h2>My Games</h2>
+            <div id="games-list-container"></div>
+        </section>
+
+        <section id="trading-log" class="content-section">
+            <h2>Trading Log</h2>
+            <div id="trading-log-container"></div>
+        </section>
+
+        <section id="analytics" class="content-section">
+            <h2>Trade Analytics</h2>
+            <div id="stats-container" class="stats-container"></div>
+            <div>
+                <h3>Cumulative P/L Over Time</h3>
+                <canvas id="profitChart"></canvas>
+            </div>
+        </section>
     </main>
 </div>
 
@@ -66,8 +146,9 @@
             .then(data => {
                 populateGames(data.games);
                 setupTradingLog(data.trades);
-                populateBlog(data.blogPosts);
                 populateAnalytics(data.trades);
+                // Blog posts are no longer displayed, but you can add the call back here if you want
+                // populateBlog(data.blogPosts);
             })
             .catch(error => console.error('Error loading data:', error));
 
@@ -90,10 +171,9 @@
             return;
         }
         container.innerHTML = games.map(game => {
-            // Correctly constructs the path for the deployed game
             const gamePath = `${game.path}/index.html`;
             return `
-                <div class="game-card">
+                <div class="game-card project-card">
                     <h3>${game.name}</h3>
                     <p>${game.description}</p>
                     <a href="${gamePath}" target="_blank">Play Game</a>
@@ -160,30 +240,25 @@
         tableHTML += '</tbody></table>';
         container.innerHTML = tableHTML;
     }
-
-    function populateBlog(posts) {
-        const container = document.getElementById('blog-posts-container');
-        container.innerHTML = posts.map(post => `
-            <article>
-                <h3>${post.title}</h3>
-                <p><small>Posted on ${post.date}</small></p>
-                <p>${post.content}</p>
-            </article>
-        `).join('<hr>');
-    }
     
     function populateAnalytics(trades) {
         const closedTrades = trades.filter(trade => trade.status && trade.status.toLowerCase() === 'closed');
-        if (closedTrades.length === 0) { document.getElementById('stats-container').innerHTML = "<p>No closed trades to analyze yet.</p>"; return; }
+        if (closedTrades.length === 0) { 
+            document.getElementById('stats-container').innerHTML = "<p>No closed trades to analyze yet.</p>";
+            // Ensure chart is cleared if there's no data
+            const chartCtx = document.getElementById('profitChart').getContext('2d');
+            if(window.myProfitChart) window.myProfitChart.destroy();
+            return; 
+        }
         let totalGainLoss = 0, totalCostBasis = 0, totalProceeds = 0, wins = 0, losses = 0;
         closedTrades.forEach(trade => {
-            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : (trade.closePrice - trade.purchasePrice) * trade.quantity;
+            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : 0;
             totalGainLoss += pnl;
-            totalCostBasis += trade.costBasis || (trade.purchasePrice * trade.quantity);
-            totalProceeds += trade.proceeds || (trade.closePrice * trade.quantity);
-            if (pnl > 0) wins++; else losses++;
+            totalCostBasis += trade.costBasis || 0;
+            totalProceeds += trade.proceeds || 0;
+            if (pnl > 0) wins++; else if (pnl < 0) losses++;
         });
-        const winLossRatio = losses > 0 ? (wins / losses).toFixed(2) : wins;
+        const winLossRatio = losses > 0 ? (wins / losses).toFixed(2) : (wins > 0 ? "Infinity" : 0);
         document.getElementById('stats-container').innerHTML = `
             <div class="stat-card"><h3>Total Cost Basis</h3><p>$${totalCostBasis.toFixed(2)}</p></div>
             <div class="stat-card"><h3>Total Proceeds</h3><p>$${totalProceeds.toFixed(2)}</p></div>
@@ -195,22 +270,24 @@
         let cumulativeProfit = 0;
         const chartData = { labels: [], profits: [] };
         closedTrades.forEach(trade => {
-            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : (trade.closePrice - trade.purchasePrice) * trade.quantity;
+            const pnl = (trade.proceeds && trade.costBasis) ? (trade.proceeds - trade.costBasis) : 0;
             cumulativeProfit += pnl;
             chartData.labels.push(new Date(trade.closeDateTime).toLocaleDateString());
             chartData.profits.push(cumulativeProfit.toFixed(2));
         });
-        const Chart = window.Chart;
         const ctx = document.getElementById('profitChart').getContext('2d');
-        new Chart(ctx, {
+        if(window.myProfitChart) {
+            window.myProfitChart.destroy();
+        }
+        window.myProfitChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: chartData.labels,
                 datasets: [{
                     label: 'Cumulative P/L',
                     data: chartData.profits,
-                    borderColor: '#4CAF50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
                     fill: true,
                     tension: 0.1
                 }]
