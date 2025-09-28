@@ -25,27 +25,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4 # Step 1: Get a copy of your code
 
-#      - name: Set up Python
-#        uses: actions/setup-python@v5 # Step 2: Install Python
-#        with:
-#          python-version: '3.11'
-#
-#      - name: Install Pygame dependencies
-#        run: pip install pygbag # Step 3: Install pygbag
-#
-#      - name: Build Pygame games for the web
-#        run: |
-#          Add a build command here for EACH of your games
-#          pygbag games/minesweeper/
-#          pygbag games/another-game/
+      #      - name: Set up Python
+      #        uses: actions/setup-python@v5 # Step 2: Install Python
+      #        with:
+      #          python-version: '3.11'
+      #
+      #      - name: Install Pygame dependencies
+      #        run: pip install pygbag # Step 3: Install pygbag
+      #
+      #      - name: Build Pygame games for the web
+      #        run: |
+      #          Add a build command here for EACH of your games
+      #          pygbag games/minesweeper/
+      #          pygbag games/another-game/
       - name: Assemble final website in /dist folder
         run: |
-#          mkdir dist # Create the distribution directory
+          #          mkdir dist # Create the distribution directory
           # Copy the main website files
-          cp src/index.html src/data.json dist/
+               cp src/index.html src/data.json dist/
           # Copy the compiled game folders
           # Add a copy command here for EACH of your games
-#          cp -r games/minesweeper/build/web dist/minesweeper
+          #          cp -r games/minesweeper/build/web dist/minesweeper
           # cp -r games/another-game/build/web dist/another-game
 
       - name: Upload artifact
