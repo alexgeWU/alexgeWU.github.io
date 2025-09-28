@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the game */
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+        }
+        canvas {
+            background-color: #334155; /* slate-700 */
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .difficulty-btn.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-2 text-slate-100">Minesweeper</h1>
+        <p class="text-center text-slate-400 mb-6">Left-click to reveal, Right-click to flag.</p>
+
+        <!-- Game Controls -->
+        <div class="bg-slate-800 p-3 rounded-lg shadow-lg mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-lg">Difficulty:</span>
+                <div class="flex rounded-md shadow-sm" role="group">
+                    <button type="button" id="easy-btn" class="difficulty-btn px-4 py-2 text-sm font-medium text-slate-200 bg-slate-700 rounded-l-lg hover:bg-slate-600">Easy</button>
+                    <button type="button" id="medium-btn" class="difficulty-btn px-4 py-2 text-sm font-medium text-slate-200 bg-slate-700 border-x border-slate-600 hover:bg-slate-600">Medium</button>
+                    <button type="button" id="hard-btn" class="difficulty-btn px-4 py-2 text-sm font-medium text-slate-200 bg-slate-700 rounded-r-lg hover:bg-slate-600">Hard</button>
+                </div>
+            </div>
+            <div class="flex items-center gap-6 text-xl">
+                 <div class="flex items-center gap-2">
+                    <span class="text-red-400 text-2xl">🚩</span>
+                    <span id="flags-left" class="font-mono font-bold">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">⏱️</span>
+                    <span id="timer" class="font-mono font-bold">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Canvas for the game -->
+        <div id="canvas-container" class="w-full aspect-[4/3] max-h-[70vh]">
+             <canvas id="minesweeper-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+        <div class="bg-slate-800 text-center p-8 rounded-xl shadow-2xl">
+            <h2 id="game-over-message" class="text-4xl font-bold mb-4"></h2>
+            <button id="restart-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-lg text-lg">
+                Play Again
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        const canvas = document.getElementById('minesweeper-canvas');
+        const ctx = canvas.getContext('2d');
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // --- UI Elements ---
+        const flagsLeftEl = document.getElementById('flags-left');
+        const timerEl = document.getElementById('timer');
+        const easyBtn = document.getElementById('easy-btn');
+        const mediumBtn = document.getElementById('medium-btn');
+        const hardBtn = document.getElementById('hard-btn');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const gameOverMessageEl = document.getElementById('game-over-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // --- Game Configuration ---
+        const difficulties = {
+            easy: { rows: 9, cols: 9, mines: 10 },
+            medium: { rows: 16, cols: 16, mines: 40 },
+            hard: { rows: 16, cols: 30, mines: 99 },
+        };
+        let currentDifficulty = 'medium';
+
+        // --- Game State ---
+        let board = [];
+        let rows, cols, mineCount;
+        let flagsPlaced;
+        let gameOver;
+        let firstClick;
+        let timerInterval;
+        let secondsPassed;
+        let cellSize;
+
+        // --- Colors & Styling ---
+        const colors = {
+            hidden: '#475569', // slate-600
+            revealed: '#94a3b8', // slate-400
+            flag: '#f87171', // red-400
+            mine: '#ef4444', // red-500
+            grid: '#334155', // slate-700
+            text: ['#3b82f6', '#16a34a', '#dc2626', '#4f46e5', '#9333ea', '#0d9488', '#1e293b', '#64748b'] // Various Tailwind colors
+        };
+        
+        function getCellFromCoords(x, y) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const canvasX = (x - rect.left) * scaleX;
+            const canvasY = (y - rect.top) * scaleY;
+            
+            const col = Math.floor(canvasX / cellSize);
+            const row = Math.floor(canvasY / cellSize);
+
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                return { row, col };
+            }
+            return null;
+        }
+
+        function initGame() {
+            // Stop previous timer
+            clearInterval(timerInterval);
+            
+            // Set difficulty
+            const diff = difficulties[currentDifficulty];
+            rows = diff.rows;
+            cols = diff.cols;
+            mineCount = diff.mines;
+
+            // Reset state
+            gameOver = false;
+            firstClick = true;
+            flagsPlaced = 0;
+            secondsPassed = 0;
+
+            // Reset UI
+            flagsLeftEl.textContent = mineCount;
+            timerEl.textContent = '0';
+            gameOverModal.classList.add('hidden');
+            
+            // Create board data structure
+            board = Array(rows).fill(null).map(() => Array(cols).fill(null).map(() => ({
+                isMine: false,
+                isRevealed: false,
+                isFlagged: false,
+                neighborMines: 0
+            })));
+
+            // Resize canvas and draw initially
+            resizeCanvas();
+        }
+
+        function placeMines(initialRow, initialCol) {
+            let minesToPlace = mineCount;
+            while (minesToPlace > 0) {
+                const r = Math.floor(Math.random() * rows);
+                const c = Math.floor(Math.random() * cols);
+                // Ensure mine is not placed on the first click spot or where another mine is
+                if (!board[r][c].isMine && !(r === initialRow && c === initialCol)) {
+                    board[r][c].isMine = true;
+                    minesToPlace--;
+                }
+            }
+
+            // Calculate neighbor mine counts
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (!board[r][c].isMine) {
+                        let count = 0;
+                        for (let dr = -1; dr <= 1; dr++) {
+                            for (let dc = -1; dc <= 1; dc++) {
+                                if (dr === 0 && dc === 0) continue;
+                                const nr = r + dr;
+                                const nc = c + dc;
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].isMine) {
+                                    count++;
+                                }
+                            }
+                        }
+                        board[r][c].neighborMines = count;
+                    }
+                }
+            }
+        }
+        
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = colors.grid;
+            
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cell = board[r][c];
+                    const x = c * cellSize;
+                    const y = r * cellSize;
+                    
+                    ctx.fillStyle = cell.isRevealed ? colors.revealed : colors.hidden;
+                    ctx.fillRect(x, y, cellSize, cellSize);
+                    ctx.strokeRect(x, y, cellSize, cellSize);
+
+                    if (cell.isRevealed) {
+                        if (cell.isMine) {
+                            ctx.fillStyle = colors.mine;
+                            ctx.beginPath();
+                            ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.3, 0, 2 * Math.PI);
+                            ctx.fill();
+                        } else if (cell.neighborMines > 0) {
+                            ctx.fillStyle = colors.text[cell.neighborMines - 1];
+                            ctx.font = `bold ${cellSize * 0.6}px Inter`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(cell.neighborMines, x + cellSize / 2, y + cellSize / 2 + 2);
+                        }
+                    } else if (cell.isFlagged) {
+                        ctx.fillStyle = colors.flag;
+                        ctx.font = `${cellSize * 0.6}px Inter`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('🚩', x + cellSize / 2, y + cellSize / 2);
+                    }
+                }
+            }
+        }
+
+        function revealCell(row, col) {
+            const cell = board[row][col];
+            if (cell.isRevealed || cell.isFlagged) {
+                return;
+            }
+            cell.isRevealed = true;
+            
+            if (cell.isMine) {
+                endGame(false);
+                return;
+            }
+
+            if (cell.neighborMines === 0) {
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        if (dr === 0 && dc === 0) continue;
+                        const nr = row + dr;
+                        const nc = col + dc;
+                        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                            revealCell(nr, nc);
+                        }
+                    }
+                }
+            }
+            checkWinCondition();
+        }
+        
+        function checkWinCondition() {
+            let revealedCount = 0;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (board[r][c].isRevealed) {
+                        revealedCount++;
+                    }
+                }
+            }
+            if (revealedCount === rows * cols - mineCount) {
+                endGame(true);
+            }
+        }
+
+        function endGame(isWin) {
+            gameOver = true;
+            clearInterval(timerInterval);
+            
+            // Reveal all mines
+            board.forEach(row => row.forEach(cell => {
+                if(cell.isMine) cell.isRevealed = true;
+            }));
+
+            drawBoard();
+            
+            gameOverMessageEl.textContent = isWin ? "You Win!" : "Game Over";
+            gameOverModal.classList.remove('hidden');
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsPassed++;
+                timerEl.textContent = secondsPassed;
+            }, 1000);
+        }
+
+        // --- Event Handlers ---
+        canvas.addEventListener('click', (e) => {
+            if (gameOver) return;
+            const pos = getCellFromCoords(e.clientX, e.clientY);
+            if(pos) {
+                if (firstClick) {
+                    placeMines(pos.row, pos.col);
+                    firstClick = false;
+                    startTimer();
+                }
+                revealCell(pos.row, pos.col);
+                drawBoard();
+            }
+        });
+        
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (gameOver) return;
+            const pos = getCellFromCoords(e.clientX, e.clientY);
+            if(pos) {
+                const cell = board[pos.row][pos.col];
+                if (!cell.isRevealed) {
+                    cell.isFlagged = !cell.isFlagged;
+                    flagsPlaced += cell.isFlagged ? 1 : -1;
+                    flagsLeftEl.textContent = mineCount - flagsPlaced;
+                    drawBoard();
+                }
+            }
+        });
+
+        [easyBtn, mediumBtn, hardBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentDifficulty = btn.id.replace('-btn', '');
+                document.querySelector('.difficulty-btn.active')?.classList.remove('active');
+                btn.classList.add('active');
+                initGame();
+            });
+        });
+        
+        restartBtn.addEventListener('click', initGame);
+
+        // --- Canvas Resizing ---
+        function resizeCanvas() {
+            const containerWidth = canvasContainer.clientWidth;
+            const containerHeight = canvasContainer.clientHeight;
+            
+            const cellWidth = containerWidth / cols;
+            const cellHeight = containerHeight / rows;
+            
+            cellSize = Math.min(cellWidth, cellHeight);
+            
+            const canvasWidth = cellSize * cols;
+            const canvasHeight = cellSize * rows;
+            
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            canvas.style.width = `${canvasWidth}px`;
+            canvas.style.height = `${canvasHeight}px`;
+
+            drawBoard();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Initial setup
+        mediumBtn.classList.add('active');
+        initGame();
+    </script>
+
+</body>
+</html>
+
