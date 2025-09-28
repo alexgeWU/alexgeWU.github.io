@@ -42,7 +42,8 @@ jobs:
         run: |
           #          mkdir dist # Create the distribution directory
           # Copy the main website files
-               cp src/index.html src/data.json dist/
+          cp src/index.html src/data.json dist/
+          cp games/minesweeper/index.html dist/minesweeper
           # Copy the compiled game folders
           # Add a copy command here for EACH of your games
           #          cp -r games/minesweeper/build/web dist/minesweeper
