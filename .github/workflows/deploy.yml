@@ -35,9 +35,9 @@ jobs:
 #
 #      - name: Build Pygame games for the web
 #        run: |
-#          # Add a build command here for EACH of your games
+#          Add a build command here for EACH of your games
 #          pygbag games/minesweeper/
-#          # pygbag games/another-game/
+#          pygbag games/another-game/
       - name: Assemble final website in /dist folder
         run: |
 #          mkdir dist # Create the distribution directory
