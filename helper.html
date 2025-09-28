@@ -2,73 +2,163 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Data Entry Helper</title>
+    <title>Content Helper</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2, h3 { color: #333; }
-        input, textarea, button { width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ddd; }
-        button { background-color: #4CAF50; color: white; cursor: pointer; border: none; font-size: 16px; }
-        button:hover { background-color: #45a049; }
-        textarea#output { height: 150px; font-family: monospace; background-color: #eee; }
-        .copy-button { width: auto; padding: 5px 10px; font-size: 12px; float: right; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            margin: 0;
+            padding: 2rem;
+        }
+        main {
+            max-width: 700px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 2rem;
+        }
+        .form-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            font-family: monospace;
+            background-color: #e9ecef;
+            height: 200px;
+            white-space: pre;
+        }
+        .close-fields {
+            border-top: 1px solid #dee2e6;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Content Generator for <code>data.json</code></h2>
-    <p>Fill out a form below, click "Generate", and then copy the text from the output box and paste it into your <code>data.json</code> file.</p>
+<main>
+    <h1>Content Generator</h1>
 
-    <hr>
+    <section class="form-section">
+        <h2>Add New Trade</h2>
+        <div class="input-group">
+            <label for="tradeStatus">Status</label>
+            <select id="tradeStatus">
+                <option value="OPEN">Open</option>
+                <option value="CLOSED">Closed</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="tradeTicker">Ticker</label>
+            <input type="text" id="tradeTicker" placeholder="e.g., AAPL">
+        </div>
+        <div class="input-group">
+            <label for="purchaseDateTime">Purchase Date & Time</label>
+            <input type="datetime-local" id="purchaseDateTime">
+        </div>
+        <div class="input-group">
+            <label for="tradePrice">Purchase Price</label>
+            <input type="number" step="0.01" id="tradePrice" placeholder="e.g., 175.50">
+        </div>
+        <div class="input-group">
+            <label for="tradeQuantity">Quantity</label>
+            <input type="number" id="tradeQuantity" placeholder="e.g., 10">
+        </div>
 
-    <h3>Add a New Trade</h3>
-    <label for="tradeTicker"></label><input type="text" id="tradeTicker" placeholder="Ticker (e.g., NVDA)">
-    <label for="tradePrice"></label><input type="number" id="tradePrice" placeholder="Purchase Price (e.g., 305.10)">
-    <label for="tradeQuantity"></label><input type="number" id="tradeQuantity" placeholder="Quantity (e.g., 8)">
-    <label for="tradeNotes"></label><textarea id="tradeNotes" placeholder="Notes (e.g., AI-related play.)" rows="2"></textarea>
-    <button onclick="generateTrade()">Generate Trade JSON</button>
+        <div id="closeFields" class="close-fields" style="display:none;">
+            <div class="input-group">
+                <label for="closeDateTime">Close Date & Time</label>
+                <input type="datetime-local" id="closeDateTime">
+            </div>
+            <div class="input-group">
+                <label for="closePrice">Close Price</label>
+                <input type="number" step="0.01" id="closePrice" placeholder="e.g., 185.75">
+            </div>
+        </div>
 
-    <hr>
+        <div class="input-group">
+            <label for="tradeNotes">Notes</label>
+            <textarea id="tradeNotes" rows="3"></textarea>
+        </div>
+        <button onclick="generateTrade()">Generate Trade JSON</button>
+    </section>
 
-    <h3>Add a New Blog Post</h3>
-    <label for="blogTitle"></label><input type="text" id="blogTitle" placeholder="Blog Post Title">
-    <label for="blogContent"></label><textarea id="blogContent" placeholder="Content of the blog post..." rows="4"></textarea>
-    <button onclick="generateBlog()">Generate Blog JSON</button>
-
-    <hr>
-
-    <h3>Output:</h3>
-    <button class="copy-button" onclick="copyOutput()">Copy to Clipboard</button>
-    <label for="output"></label><textarea id="output" readonly></textarea>
-</div>
+    <section class="form-section">
+        <h2>Generated JSON Output</h2>
+        <label for="output"></label><textarea id="output" readonly></textarea>
+    </section>
+</main>
 
 <script>
+    document.getElementById('tradeStatus').addEventListener('change', function() {
+        document.getElementById('closeFields').style.display = this.value === 'CLOSED' ? 'block' : 'none';
+    });
+
     function generateTrade() {
+        const purchaseDateValue = document.getElementById('purchaseDateTime').value;
+        const closeDateValue = document.getElementById('closeDateTime').value;
+        const status = document.getElementById('tradeStatus').value;
+
         const trade = {
+            status: status.toUpperCase(),
             ticker: document.getElementById('tradeTicker').value.toUpperCase(),
-            purchasePrice: parseFloat(document.getElementById('tradePrice').value),
-            quantity: parseInt(document.getElementById('tradeQuantity').value),
-            dateTime: new Date().toISOString(),
+            purchaseDateTime: purchaseDateValue ? new Date(purchaseDateValue).toISOString() : null,
+            purchasePrice: parseFloat(document.getElementById('tradePrice').value) || 0,
+            quantity: parseInt(document.getElementById('tradeQuantity').value) || 0,
+            closeDateTime: status === 'CLOSED' && closeDateValue ? new Date(closeDateValue).toISOString() : null,
+            closePrice: status === 'CLOSED' ? parseFloat(document.getElementById('closePrice').value) || null : null,
             notes: document.getElementById('tradeNotes').value
         };
-        // The 'null, 2' part makes the JSON nicely formatted
-        document.getElementById('output').value = JSON.stringify(trade, null, 2) + ',';
-    }
 
-    function generateBlog() {
-        const post = {
-            title: document.getElementById('blogTitle').value,
-            date: new Date().toISOString().split('T')[0], // Gets YYYY-MM-DD
-            content: document.getElementById('blogContent').value
-        };
-        document.getElementById('output').value = JSON.stringify(post, null, 2) + ',';
-    }
-
-    function copyOutput() {
         const outputArea = document.getElementById('output');
+        outputArea.value = JSON.stringify(trade, null, 2) + ',';
         outputArea.select();
-        document.execCommand('copy');
-        alert('Copied to clipboard!');
+        navigator.clipboard.writeText(outputArea.value).then(() => {
+            console.log('JSON copied to clipboard!');
+        });
     }
 </script>
 </body>

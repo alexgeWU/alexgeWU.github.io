@@ -4,79 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Personal Site</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- New Visual Theme --- */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            background-color: #f8f9fa; /* Lighter, softer grey background */
-            color: #212529; /* Darker text for better contrast */
-        }
-        .container {
-            max-width: 960px;
-            margin: 25px auto;
-            padding: 25px;
-            background-color: #ffffff; /* Pure white content area */
-            box-shadow: 0 2px 15px rgba(0,0,0,0.08); /* Softer shadow */
-            border-radius: 8px;
-        }
-        nav {
-            display: flex;
-            border-bottom: 1px solid #dee2e6; /* Lighter border */
-            margin-bottom: 25px;
-        }
-        nav button {
-            padding: 12px 20px;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size: 16px;
-            color: #6c757d; /* Muted color for inactive tabs */
-            border-bottom: 3px solid transparent; /* Placeholder for active indicator */
-            transition: color 0.2s ease-in-out;
-        }
-        nav button:hover {
-            color: #343a40;
-        }
-        nav button.active {
-            border-bottom: 3px solid #4CAF50; /* Green accent for active tab */
-            color: #212529; /* Active tab text is darker */
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; background-color: #f8f9fa; color: #212529; }
+        .container { max-width: 960px; margin: 25px auto; padding: 25px; background-color: #ffffff; box-shadow: 0 2px 15px rgba(0,0,0,0.08); border-radius: 8px; }
+        nav { display: flex; border-bottom: 1px solid #dee2e6; margin-bottom: 25px; }
+        nav button { padding: 12px 20px; border: none; background-color: transparent; cursor: pointer; font-size: 16px; color: #6c757d; border-bottom: 3px solid transparent; transition: color 0.2s ease-in-out; }
+        nav button:hover { color: #343a40; }
+        nav button.active { border-bottom: 3px solid #4CAF50; color: #212529; }
         .content-section { display: none; }
         .content-section.active { display: block; }
         h1, h2 { color: #343a40; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-
-        /* Styles for Games List */
         .game-card { border: 1px solid #dee2e6; padding: 20px; margin-bottom: 15px; border-radius: 6px; }
-        .game-card h3 { margin-top: 0; }
-        .game-card a {
-            text-decoration: none;
-            background-color: #4CAF50; /* Green accent button */
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            display: inline-block;
-            transition: background-color 0.2s ease-in-out;
-        }
-        .game-card a:hover { background-color: #45a049; } /* Darker green on hover */
-
-        /* Styles for Trading Log Table */
+        .game-card a { text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 15px; border-radius: 5px; display: inline-block; transition: background-color 0.2s ease-in-out; }
+        .game-card a:hover { background-color: #45a049; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
-        th {
-            background-color: #e9f5e9; /* Very light green for table headers */
-            font-weight: 600;
-        }
-        /* Zebra-striping for table rows */
+        th { background-color: #e9f5e9; font-weight: 600; }
         tbody tr:nth-of-type(odd) { background-color: #f8f9fa; }
+        .stats-container { display: flex; justify-content: space-around; text-align: center; margin: 20px 0; }
+        .stat-card { background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; width: 30%; }
+        .stat-card h3 { margin-top: 0; color: #6c757d; }
+        .stat-card p { font-size: 24px; font-weight: bold; margin-bottom: 0; }
+        .win { color: #28a745; }
+        .loss { color: #dc3545; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
-        <h1>My Website</h1>
+        <h1>Alex Ge</h1>
         <p>Welcome to my personal project space.</p>
     </header>
 
@@ -84,35 +41,20 @@
         <button class="nav-button active" data-target="about">About Me</button>
         <button class="nav-button" data-target="games">Games</button>
         <button class="nav-button" data-target="trading-log">Trading Log</button>
+        <button class="nav-button" data-target="analytics">Analytics</button>
         <button class="nav-button" data-target="blog">Blog</button>
     </nav>
 
     <main>
-        <section id="about" class="content-section active">
-            <h2>About Me</h2>
-            <p>This is the placeholder for your "About Me" information. You can write about your interests, skills, or anything else you want to share!</p>
-        </section>
-
-        <section id="games" class="content-section">
-            <h2>My Games</h2>
-            <p>Here are a few games I've made with Pygame.</p>
-            <div id="games-list-container"></div>
-        </section>
-
-        <section id="trading-log" class="content-section">
-            <h2>Trading Log</h2>
-            <div id="trading-log-container"></div>
-        </section>
-
-        <section id="blog" class="content-section">
-            <h2>Blog</h2>
-            <div id="blog-posts-container"></div>
-        </section>
+        <section id="about" class="content-section active"><h2>About Me</h2><p>Wasshup</p></section>
+        <section id="games" class="content-section"><h2>My Games</h2><div id="games-list-container"></div></section>
+        <section id="trading-log" class="content-section"><h2>Trading Log</h2><div id="trading-log-container"></div></section>
+        <section id="analytics" class="content-section"><h2>Trade Analytics</h2><div id="stats-container" class="stats-container"></div><div><h3>Cumulative P/L Over Time</h3><canvas id="profitChart"></canvas></div></section>
+        <section id="blog" class="content-section"><h2>Blog</h2><div id="blog-posts-container"></div></section>
     </main>
 </div>
 
 <script>
-    // --- THIS SCRIPT SECTION IS UNCHANGED ---
     document.addEventListener('DOMContentLoaded', () => {
         fetch('data.json')
             .then(response => response.json())
@@ -120,23 +62,23 @@
                 populateGames(data.games);
                 populateTradingLog(data.trades);
                 populateBlog(data.blogPosts);
+                populateAnalytics(data.trades);
             })
             .catch(error => console.error('Error loading data:', error));
 
         const navButtons = document.querySelectorAll('.nav-button');
         const contentSections = document.querySelectorAll('.content-section');
-
         navButtons.forEach(button => {
             button.addEventListener('click', () => {
                 navButtons.forEach(btn => btn.classList.remove('active'));
                 contentSections.forEach(sec => sec.classList.remove('active'));
                 button.classList.add('active');
-                const targetId = button.getAttribute('data-target');
-                document.getElementById(targetId).classList.add('active');
+                document.getElementById(button.getAttribute('data-target')).classList.add('active');
             });
         });
     });
 
+    // --- RESTORED FUNCTIONS ---
     function populateGames(games) {
         const container = document.getElementById('games-list-container');
         if (!games || games.length === 0) {
@@ -162,10 +104,11 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Status</th>
                             <th>Ticker</th>
-                            <th>Date & Time</th>
-                            <th>Quantity</th>
+                            <th>Purchase Date</th>
                             <th>Purchase Price</th>
+                            <th>Close Price</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
@@ -173,10 +116,11 @@
             `;
         tableHTML += trades.map(trade => `
                 <tr>
+                    <td>${trade.status}</td>
                     <td>${trade.ticker}</td>
-                    <td>${new Date(trade.dateTime).toLocaleString()}</td>
-                    <td>${trade.quantity}</td>
+                    <td>${new Date(trade.purchaseDateTime).toLocaleDateString()}</td>
                     <td>$${trade.purchasePrice.toFixed(2)}</td>
+                    <td>${trade.closePrice ? '$' + trade.closePrice.toFixed(2) : 'N/A'}</td>
                     <td>${trade.notes}</td>
                 </tr>
             `).join('');
@@ -198,6 +142,65 @@
                 </article>
                 <hr>
             `).join('');
+    }
+
+    // --- ANALYTICS FUNCTION (UNCHANGED) ---
+    function populateAnalytics(trades) {
+        const closedTrades = trades.filter(trade => trade.status && trade.status.toLowerCase() === 'closed');
+
+        if (closedTrades.length === 0) {
+            document.getElementById('stats-container').innerHTML = "<p>No closed trades to analyze yet.</p>";
+            return;
+        }
+
+        let totalGainLoss = 0;
+        let wins = 0;
+        let losses = 0;
+        closedTrades.forEach(trade => {
+            const pnl = (trade.closePrice - trade.purchasePrice) * trade.quantity;
+            totalGainLoss += pnl;
+            if (pnl > 0) wins++; else losses++;
+        });
+
+        const winLossRatio = losses > 0 ? (wins / losses).toFixed(2) : wins;
+
+        document.getElementById('stats-container').innerHTML = `
+                <div class="stat-card"><h3>Total P/L</h3><p class="${totalGainLoss >= 0 ? 'win' : 'loss'}">$${totalGainLoss.toFixed(2)}</p></div>
+                <div class="stat-card"><h3>Win/Loss</h3><p><span class="win">${wins}</span> / <span class="loss">${losses}</span></p></div>
+                <div class="stat-card"><h3>W/L Ratio</h3><p>${winLossRatio}</p></div>
+            `;
+
+        closedTrades.sort((a, b) => new Date(a.closeDateTime) - new Date(b.closeDateTime));
+        let cumulativeProfit = 0;
+        const chartData = { labels: [], profits: [] };
+        closedTrades.forEach(trade => {
+            const pnl = (trade.closePrice - trade.purchasePrice) * trade.quantity;
+            cumulativeProfit += pnl;
+            chartData.labels.push(new Date(trade.closeDateTime).toLocaleDateString());
+            chartData.profits.push(cumulativeProfit.toFixed(2));
+        });
+
+        /** @type {any} */
+        const Chart = window.Chart;
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Cumulative P/L',
+                    data: chartData.profits,
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { ticks: { callback: value => '$' + value } } }
+            }
+        });
     }
 </script>
 </body>
