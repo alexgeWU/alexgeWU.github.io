@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alexander Ge | Portfolio</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
+    <style type="text/css">
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; background-color: #f8f9fa; color: #212529; }
         .container { max-width: 960px; margin: 25px auto; padding: 25px; background-color: #ffffff; box-shadow: 0 2px 15px rgba(0,0,0,0.08); border-radius: 8px; }
         nav { display: flex; flex-wrap: wrap; border-bottom: 1px solid #dee2e6; margin-bottom: 25px; }
@@ -25,7 +25,7 @@
         .job-title { font-weight: bold; }
         .job-duration { color: #6c757d; font-size: 0.9em; }
         .social-links a { margin-right: 15px; text-decoration: none; color: #007bff; }
-        .social-links a:hover { text-decoration: underline; }
+        .social-links a:hover, .social-links span:hover { text-decoration: underline; cursor: default; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
         th { background-color: #e9ecef; font-weight: 600; }
@@ -45,9 +45,9 @@
     <header>
         <h1>Alexander Ge</h1>
         <p>Computer Engineering Student at Washington University in St. Louis</p>
-        <div class="social-links">
-            <a href="mailto:age@wustl.edu">age@wustl.edu</a> | 
-            <a href="https://github.com/your-github-url" target="_blank">GitHub</a> | 
+        <div class="social-links" style="text-align: center;">
+            <a href="mailto:age@wustl.edu">age@wustl.edu</a> <span style="padding: 0 10px;">|</span> 
+            <a href="https://github.com/your-github-url" target="_blank">GitHub</a> <span style="padding: 0 10px;">|</span> 
             <a href="https://linkedin.com/in/your-linkedin-url" target="_blank">LinkedIn</a>
         </div>
     </header>

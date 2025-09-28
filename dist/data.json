@@ -2,7 +2,7 @@
   "games": [
     {
       "name": "Minesweeper",
-      "description": "A classic game built with Pygame.",
+      "description": "A classic game built with html.",
       "path": "./minesweeper/"
     }
   ],
