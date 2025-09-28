@@ -1,14 +1,9 @@
 {
   "games": [
     {
-      "name": "Asteroid Shooter",
-      "description": "A classic space shooter game built with Pygame.",
-      "path": "./asteroid-shooter/"
-    },
-    {
-      "name": "Platformer Game",
-      "description": "A fun 2D platformer. Jump around and collect coins!",
-      "path": "./platformer-game/"
+      "name": "MineSweeper",
+      "description": "A classic game built with Pygame.",
+      "path": "./minesweeper/"
     }
   ],
   "trades": [
@@ -25,6 +20,13 @@
       "quantity": 5,
       "dateTime": "2025-09-27T14:00:00Z",
       "notes": "Long term hold."
+    },
+    {
+      "ticker": "UNH",
+      "purchasePrice": 305,
+      "quantity": 4,
+      "dateTime": "2025-09-27T23:53:05.784Z",
+      "notes": "FUCKING HELLO "
     }
   ],
   "blogPosts": [
