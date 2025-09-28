@@ -1,32 +1,31 @@
 {
   "games": [
     {
-      "name": "MineSweeper",
+      "name": "Minesweeper",
       "description": "A classic game built with Pygame.",
       "path": "./minesweeper/"
     }
   ],
   "trades": [
     {
+      "status": "CLOSED",
       "ticker": "AAPL",
+      "purchaseDateTime": "2025-09-26T10:30:00.000Z",
       "purchasePrice": 175.50,
       "quantity": 10,
-      "dateTime": "2025-09-26T10:30:00Z",
-      "notes": "Bought on positive earnings report."
+      "closeDateTime": "2025-09-28T15:00:00.000Z",
+      "closePrice": 185.75,
+      "notes": "Sold after product announcement."
     },
     {
+      "status": "OPEN",
       "ticker": "GOOGL",
+      "purchaseDateTime": "2025-09-27T14:00:00.000Z",
       "purchasePrice": 140.25,
       "quantity": 5,
-      "dateTime": "2025-09-27T14:00:00Z",
+      "closeDateTime": null,
+      "closePrice": null,
       "notes": "Long term hold."
-    },
-    {
-      "ticker": "UNH",
-      "purchasePrice": 305,
-      "quantity": 4,
-      "dateTime": "2025-09-27T23:53:05.784Z",
-      "notes": "FUCKING HELLO "
     }
   ],
   "blogPosts": [
