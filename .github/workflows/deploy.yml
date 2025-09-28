@@ -41,7 +41,7 @@ jobs:
 
       - name: Assemble final website in /dist folder
         run: |
-          mkdir dist # Create the distribution directory
+#          mkdir dist # Create the distribution directory
           # Copy the main website files
           cp src/index.html src/data.json dist/
           # Copy the compiled game folders
